@@ -1,0 +1,107 @@
+import numpy as np
+from operator import itemgetter
+
+
+
+def createkdtree(dataset, layer = 0,feature=2):
+
+    length = len(dataset)
+    axis = layer % feature
+    datasetcopy = dataset[:]
+    datasetcopy.sort(key = itemgetter(axis))
+    layer += 1
+    if length == 0:
+        return None
+    elif length == 1:
+        return {'Value': dataset[0], 'Layer': layer, 'Feature': axis, 'Left': None, 'Right': None}
+    elif length != 1:
+        midst = length // 2
+        datasetleft = datasetcopy[:midst]
+        datasetright = datasetcopy[midst + 1:]
+        return {'Value': datasetcopy[midst], 'Layer': layer, 'Feature': axis,
+                'Left': createkdtree(datasetleft, layer), 'Right': createkdtree(datasetright, layer)}
+
+
+def dfs(tree, target, tracklist = []):
+    tracklistcopy = tracklist[:]
+    if not tree:
+        return None
+    elif not (tree['Left'] or tree['Right']):
+        tracklistcopy.append(tree['Value'])
+        return tree, tracklistcopy
+
+    elif (tree['Left'] or tree['Right']):
+        pointvalue = tree['Value']
+        feature = tree['Feature']
+        if target[feature] < pointvalue[feature]:
+            tracklistcopy.append(pointvalue)
+            return dfs(tree['Left'], target, tracklistcopy)
+        else:
+            tracklistcopy.append(pointvalue)
+            return dfs(tree['Right'], target, tracklistcopy)
+
+
+def caldistance(sourcePoint, targetPoint):
+    a = np.array(sourcePoint)
+    b = np.array(targetPoint)
+    return np.sqrt(sum((a - b) ** 2))
+
+
+def findpoint(tree, value):
+    if tree != None and tree['Value'] == value:
+        return tree
+    else:
+        if tree['Left'] or tree['Right']:
+            return findpoint(tree['Left'], value) or findpoint(tree['Right'], value)
+            # return..or..返回Ture，如果两边都是Ture，返回左边的
+
+
+def kdtreeserach(tracklist, target, usedpoint = [], minDistance = float('inf'), minDistancepoint = None):
+    # float('inf')表示正无穷，float('-inf')表示负无穷
+    tracklistcopy = tracklist[:]
+    usedpointcopy = usedpoint[:]
+
+    if not minDistancepoint:
+        minDistancepoint = tracklistcopy[-1]
+
+    if len(tracklistcopy) == 1:
+        return minDistancepoint
+
+    else:
+        point = findpoint(tree, tracklist[-1])
+
+        if caldistance(point['Value'], target) < minDistance:
+            minDistance = caldistance(point['Value'], target)
+            minDistancepoint = point['Value']
+
+        fatherpoint = findpoint(tree, tracklistcopy[-2])
+        fatherpointval = fatherpoint['Value']
+        fatherpointaxis = fatherpoint['Feature']
+
+        if point == fatherpoint['Left']:
+            anotherpoint = fatherpoint['Right']
+
+        elif point == fatherpoint['Right']:
+            anotherpoint = fatherpoint['Left']
+
+        if ((abs(target[fatherpointaxis] - fatherpointval[fatherpointaxis]) > minDistance) or anotherpoint == None
+                or anotherpoint['Value'] in usedpointcopy):
+            usedpoint = tracklistcopy.pop()
+            # pop() 函数用于移除列表中的一个元素（默认最后一个元素），并且返回该元素的值。
+            usedpointcopy.append(usedpoint)
+
+            return kdtreeserach(tracklistcopy, target, usedpointcopy, minDistance, minDistancepoint)
+
+        else:
+            usedpoint = tracklistcopy.pop()
+            usedpointcopy.append(usedpoint)
+            subvalue, subtracklist = dfs(anotherpoint,target)
+            return kdtreeserach(subtracklist, subvalue, usedpointcopy, minDistance, minDistancepoint)
+
+
+trainingSet = [(2, 3), (5, 4), (9, 6), (4, 7), (8, 1), (7, 2)]
+tree = createkdtree(trainingSet)
+target = eval(input('Input target point:'))
+value, trackList = dfs(tree, target)
+nnPoint = kdtreeserach(trackList, target)
+print(nnPoint)
