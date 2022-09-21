@@ -1,5 +1,5 @@
 # 草稿
-为什么这个就可以！
+为什么这个就可以！\\
 $$
 \hat{\bf t}^i={\mathrm{ChannelAttn}}({\bf t}^i)\\
 \hat{\bf g}^i={\mathrm{SpatialAttn}}({\bf g}^i)\\
