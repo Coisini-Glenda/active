@@ -7,3 +7,6 @@ $$
 \hat{\bf b}^i={\mathrm{Conv}}({\bf t}^i{\bf W}^i_1\odot {\bf g}^i{\bf W}^i_2)\\
 {\bf f}^i={\mathrm{Residual}}([\hat{\bf b}^i,\hat{\bf t}^i,\hat{\bf g}^i])
 $$
++ 白醋暗示v
+  + 哦护士背诵
+    + bcibvb
