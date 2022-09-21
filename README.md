@@ -9,4 +9,11 @@ $$
 $$
 + 白醋暗示v
   + 哦护士背诵
-    + bcibvb
+    + bcibvb 胡高回报闺女aryaegr
+    $$
+    \hat{\bf v}^l={\rm SA}({\bf v})\\
+     \hat{\bf q}^l={\rm SA}({\bf q})\\
+      \hat{\bf b}^l={\rm FC}({\bf v}^l{\bf W}_1\odot {\bf q}^l{\bf W}_2)\\
+      {\bf f}^l={\rm Residual}([\hat{\bf b}^l,\hat{\bf q}^l,\hat{\bf v}^l])\\
+      {\bf f}={\rm Fusion}({\bf f}^1,{\bf f}^2,\cdots,{\bf f}^L)
+      $$
